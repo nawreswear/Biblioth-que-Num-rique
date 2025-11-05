@@ -1,0 +1,751 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l'Auteur - {{ auteur.prenom }} {{ auteur.nom }}{% endblock %}
+
+{% block body %}
+<style>
+    .page-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+        background-color: var(--bg-primary);
+        transition: var(--theme-transition);
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2.5rem;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        letter-spacing: -0.5px;
+    }
+
+    .btn-secondary {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        padding: 0.875rem 2rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-secondary:hover {
+        background: var(--bg-secondary);
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+        color: var(--text-primary);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-buttons {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    /* Form Container */
+    .form-container {
+        background: var(--bg-secondary);
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-lg);
+        backdrop-filter: blur(10px);
+        transition: var(--theme-transition);
+        margin-bottom: 2rem;
+    }
+
+    .form-header {
+        background: var(--bg-tertiary);
+        padding: 2rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .form-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .form-content {
+        padding: 2rem;
+    }
+
+    /* Form Groups */
+    .form-group {
+        margin-bottom: 2rem;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.75rem;
+        letter-spacing: 0.01em;
+    }
+
+    .form-label.required::after {
+        content: " *";
+        color: var(--error-color);
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+        width: 100%;
+        padding: 1rem 1.25rem;
+        background: var(--bg-tertiary);
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        color: var(--text-primary);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        font-family: inherit;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        background: var(--bg-secondary);
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    }
+
+    .form-input::placeholder,
+    .form-textarea::placeholder {
+        color: var(--text-muted);
+    }
+
+    .form-textarea {
+        min-height: 120px;
+        resize: vertical;
+        line-height: 1.5;
+    }
+
+    .form-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1.25rem;
+        padding-right: 3rem;
+    }
+
+    .form-help {
+        display: block;
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        line-height: 1.4;
+    }
+
+    .form-error {
+        display: block;
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--error-color);
+        font-weight: 500;
+    }
+
+    /* Form Actions */
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 2.5rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border-color);
+        flex-wrap: wrap;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(99, 102, 241, 0.5);
+    }
+
+    .btn-primary:active {
+        transform: translateY(0);
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    /* STYLE AMÉLIORÉ POUR LA SECTION DE SUPPRESSION */
+    .delete-section {
+        background: var(--bg-secondary);
+        border-radius: 16px;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        box-shadow: var(--shadow-lg);
+        padding: 2rem;
+        margin-top: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .delete-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(135deg, var(--error-color) 0%, #dc2626 100%);
+    }
+
+    .delete-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .delete-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--error-color);
+        margin: 0;
+    }
+
+    .delete-warning {
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .warning-icon {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        font-size: 1.5rem;
+    }
+
+    .warning-content {
+        margin-left: 2.5rem;
+    }
+
+    .warning-title {
+        color: var(--error-color);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 1.125rem;
+    }
+
+    .warning-text {
+        color: var(--text-secondary);
+        margin: 0;
+        line-height: 1.6;
+        font-size: 0.9375rem;
+    }
+
+    .warning-list {
+        color: var(--text-secondary);
+        margin: 0.5rem 0 0 0;
+        padding-left: 1.25rem;
+        line-height: 1.5;
+    }
+
+    .warning-list li {
+        margin-bottom: 0.25rem;
+    }
+
+    /* STYLE AMÉLIORÉ POUR LE BOUTON DE SUPPRESSION */
+    .delete-form-container {
+        text-align: center;
+    }
+
+    .btn-delete {
+        background: linear-gradient(135deg, var(--error-color) 0%, #dc2626 100%);
+        color: white;
+        padding: 1.25rem 2.5rem;
+        border-radius: 12px;
+        border: none;
+        font-weight: 700;
+        font-size: 1rem;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        position: relative;
+        overflow: hidden;
+        min-width: 280px;
+        justify-content: center;
+    }
+
+    .btn-delete::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .btn-delete:hover {
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 12px 30px rgba(239, 68, 68, 0.6);
+    }
+
+    .btn-delete:hover::before {
+        left: 100%;
+    }
+
+    .btn-delete:active {
+        transform: translateY(-1px) scale(1);
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.5);
+    }
+
+    .btn-delete .delete-icon {
+        font-size: 1.25rem;
+        transition: transform 0.3s ease;
+    }
+
+    .btn-delete:hover .delete-icon {
+        transform: scale(1.2) rotate(-10deg);
+    }
+
+    .btn-delete .delete-text {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Effet de pulsation pour attirer l'attention */
+    @keyframes pulse-danger {
+        0%, 100% {
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+        50% {
+            box-shadow: 0 6px 30px rgba(239, 68, 68, 0.8);
+        }
+    }
+
+    .btn-delete {
+        animation: pulse-danger 3s ease-in-out infinite;
+    }
+
+    .btn-delete:hover {
+        animation: none;
+    }
+
+    /* Confirmation dialog style */
+    .confirmation-dialog {
+        background: var(--bg-secondary);
+        border: 2px solid var(--error-color);
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: var(--shadow-xl);
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    /* Form Validation States */
+    .form-input.error,
+    .form-select.error,
+    .form-textarea.error {
+        border-color: var(--error-color);
+        box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+    }
+
+    .form-input.success,
+    .form-select.success,
+    .form-textarea.success {
+        border-color: var(--success-color);
+        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+    }
+
+    /* Character Counter */
+    .char-counter {
+        text-align: right;
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        margin-top: 0.5rem;
+    }
+
+    .char-counter.warning {
+        color: var(--warning-color);
+    }
+
+    .char-counter.error {
+        color: var(--error-color);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .page-container {
+            padding: 2rem 1rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+        }
+
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .header-buttons {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .header-buttons a {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .form-content {
+            padding: 1.5rem;
+        }
+
+        .form-header {
+            padding: 1.5rem;
+        }
+
+        .form-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .delete-section {
+            padding: 1.5rem;
+        }
+
+        .btn-delete {
+            width: 100%;
+            min-width: auto;
+            padding: 1.25rem 2rem;
+        }
+
+        .warning-content {
+            margin-left: 0;
+            margin-top: 2rem;
+        }
+
+        .warning-icon {
+            position: static;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-8px); }
+        75% { transform: translateX(8px); }
+    }
+
+    .page-header,
+    .form-container,
+    .delete-section {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .form-group {
+        animation: slideIn 0.4s ease-out backwards;
+    }
+
+    .form-group:nth-child(1) { animation-delay: 0.1s; }
+    .form-group:nth-child(2) { animation-delay: 0.2s; }
+    .form-group:nth-child(3) { animation-delay: 0.3s; }
+
+    .btn-delete:hover {
+        animation: shake 0.5s ease-in-out;
+    }
+</style>
+
+<div class="page-container">
+    <div class="page-header">
+        <h1 class="page-title">✍️ Modifier l'Auteur</h1>
+        <div class="header-buttons">
+            <a href="{{ path('app_auteur_index') }}" class="btn-secondary">← Retour à la liste</a>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <div class="form-header">
+            <h2 class="form-title">
+                <span>📝</span>
+                Modifier {{ auteur.prenom }} {{ auteur.nom }}
+            </h2>
+        </div>
+
+        <div class="form-content">
+            {{ form_start(form, {'attr': {'class': 'author-form', 'novalidate': 'novalidate'}}) }}
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        {{ form_label(form.prenom, null, {'label_attr': {'class': 'form-label required'}}) }}
+                        {{ form_widget(form.prenom, {'attr': {
+                            'class': 'form-input',
+                            'placeholder': 'Prénom de l\'auteur'
+                        }}) }}
+                        {% if form.prenom.vars.errors %}
+                            <span class="form-error">
+                                {% for error in form.prenom.vars.errors %}
+                                    {{ error.message }}
+                                {% endfor %}
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.nom, null, {'label_attr': {'class': 'form-label required'}}) }}
+                        {{ form_widget(form.nom, {'attr': {
+                            'class': 'form-input',
+                            'placeholder': 'Nom de l\'auteur'
+                        }}) }}
+                        {% if form.nom.vars.errors %}
+                            <span class="form-error">
+                                {% for error in form.nom.vars.errors %}
+                                    {{ error.message }}
+                                {% endfor %}
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <div class="action-buttons">
+                        <button type="submit" class="btn-primary">
+                            <span>💾</span>
+                            Mettre à jour
+                        </button>
+                        <a href="{{ path('app_auteur_show', {'id': auteur.id}) }}" class="btn-secondary">
+                            <span>👁️</span>
+                            Voir les détails
+                        </a>
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    <!-- SECTION DE SUPPRESSION AMÉLIORÉE -->
+   
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.author-form');
+    const inputs = form.querySelectorAll('.form-input, .form-select, .form-textarea');
+    const deleteButton = document.getElementById('deleteButton');
+    
+    // Validation en temps réel
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            validateField(this);
+        });
+        
+        input.addEventListener('input', function() {
+            if (this.classList.contains('error')) {
+                validateField(this);
+            }
+        });
+    });
+    
+    function validateField(field) {
+        const value = field.value.trim();
+        
+        // Réinitialiser les classes
+        field.classList.remove('error', 'success');
+        
+        if (field.hasAttribute('required') && !value) {
+            field.classList.add('error');
+            return false;
+        }
+        
+        if (value) {
+            field.classList.add('success');
+        }
+        
+        return true;
+    }
+    
+    // Validation du formulaire avant soumission
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        inputs.forEach(input => {
+            if (!validateField(input)) {
+                isValid = false;
+            }
+        });
+        
+        if (!isValid) {
+            e.preventDefault();
+            // Animation de secousse pour les champs invalides
+            const errorFields = form.querySelectorAll('.error');
+            errorFields.forEach(field => {
+                field.style.animation = 'shake 0.5s ease-in-out';
+                setTimeout(() => {
+                    field.style.animation = '';
+                }, 500);
+            });
+        }
+    });
+    
+    // Gestion du bouton de suppression
+    if (deleteButton) {
+        let clickCount = 0;
+        
+        deleteButton.addEventListener('click', function(e) {
+            clickCount++;
+            
+            // Premier clic - animation de secousse
+            if (clickCount === 1) {
+                e.preventDefault();
+                this.style.animation = 'shake 0.8s ease-in-out';
+                setTimeout(() => {
+                    this.style.animation = '';
+                }, 800);
+                
+                // Changement temporaire du texte
+                const originalText = this.querySelector('.delete-text').textContent;
+                this.querySelector('.delete-text').textContent = 'CLIQUEZ À NOUVEAU POUR CONFIRMER';
+                this.style.background = 'linear-gradient(135deg, #b91c1c 0%, #991b1b 100%)';
+                
+                // Réinitialiser après 3 secondes
+                setTimeout(() => {
+                    if (clickCount === 1) {
+                        this.querySelector('.delete-text').textContent = originalText;
+                        this.style.background = 'linear-gradient(135deg, var(--error-color) 0%, #dc2626 100%)';
+                        clickCount = 0;
+                    }
+                }, 3000);
+            }
+        });
+        
+        // Effets de survol
+        deleteButton.addEventListener('mouseenter', function() {
+            if (clickCount === 0) {
+                this.style.transform = 'translateY(-2px) scale(1.02)';
+            }
+        });
+        
+        deleteButton.addEventListener('mouseleave', function() {
+            if (clickCount === 0) {
+                this.style.transform = 'translateY(0) scale(1)';
+            }
+        });
+    }
+    
+    // Fonction de confirmation personnalisée
+    function confirmSuppression() {
+        const confirmed = confirm(
+            `ÊTES-VOUS ABSOLUMENT SÛR ?\n\n` +
+            `Vous êtes sur le point de supprimer définitivement l'auteur :\n` +
+            `"${'{{ auteur.prenom }} {{ auteur.nom }}'}"\n\n` +
+            `❌ Cette action est IRREVERSIBLE\n` +
+            `❌ Toutes les données seront PERDUES\n` +
+            `❌ Aucune restauration possible\n\n` +
+            `Tapez "SUPPRIMER" pour confirmer :`
+        );
+        
+        if (confirmed) {
+            const userInput = prompt('Pour confirmer la suppression, veuillez taper "SUPPRIMER" :');
+            return userInput === 'SUPPRIMER';
+        }
+        
+        return false;
+    }
+});
+</script>
+{% endblock %}

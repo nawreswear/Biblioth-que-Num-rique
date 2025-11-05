@@ -1,0 +1,839 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvel Ouvrier{% endblock %}
+
+{% block body %}
+<div class="page-container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+        <a href="{{ path('app_home') }}">
+            <span>🏠</span>
+            Accueil
+        </a>
+        <span class="breadcrumb-separator">›</span>
+        <a href="{{ path('app_ouvrier_index') }}">
+            <span>👷</span>
+            Ouvriers
+        </a>
+        <span class="breadcrumb-separator">›</span>
+        <span>Nouveau</span>
+    </nav>
+
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">👷 Nouvel Ouvrier</h1>
+            <p class="page-subtitle">Ajoutez un nouvel ouvrier à votre équipe</p>
+        </div>
+        <div class="header-buttons">
+            <a href="{{ path('app_ouvrier_index') }}" class="btn-secondary">
+                ← Retour à la liste
+            </a>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <div class="form-header">
+            <span class="form-icon">👷</span>
+            <h2 class="form-title">Informations de l'Ouvrier</h2>
+            <p class="form-subtitle">Renseignez les détails du nouvel ouvrier</p>
+        </div>
+
+        <div class="form-content">
+            {{ form_start(form, {'attr': {'class': 'ouvrier-create-form', 'novalidate': 'novalidate'}}) }}
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        {{ form_label(form.nom, null, {'label_attr': {'class': 'form-label required'}}) }}
+                        <div class="input-wrapper">
+                            {{ form_widget(form.nom, {'attr': {
+                                'class': 'form-input',
+                                'placeholder': 'Ex: Dupont, Martin...',
+                                'autocomplete': 'family-name'
+                            }}) }}
+                        </div>
+                        {% if form.nom.vars.errors %}
+                            <span class="form-error">
+                                <span>⚠️</span>
+                                {% for error in form.nom.vars.errors %}
+                                    {{ error.message }}
+                                {% endfor %}
+                            </span>
+                        {% else %}
+                            <span class="form-help">Le nom de famille de l'ouvrier</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.prenom, null, {'label_attr': {'class': 'form-label required'}}) }}
+                        <div class="input-wrapper">
+                            {{ form_widget(form.prenom, {'attr': {
+                                'class': 'form-input',
+                                'placeholder': 'Ex: Jean, Marie...',
+                                'autocomplete': 'given-name'
+                            }}) }}
+                        </div>
+                        {% if form.prenom.vars.errors %}
+                            <span class="form-error">
+                                <span>⚠️</span>
+                                {% for error in form.prenom.vars.errors %}
+                                    {{ error.message }}
+                                {% endfor %}
+                            </span>
+                        {% else %}
+                            <span class="form-help">Le prénom de l'ouvrier</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        {{ form_label(form.salaire, null, {'label_attr': {'class': 'form-label required'}}) }}
+                        <div class="input-wrapper">
+                            <div class="input-with-icon">
+                                {{ form_widget(form.salaire, {'attr': {
+                                    'class': 'form-input',
+                                    'placeholder': 'Ex: 2500.00',
+                                    'step': '0.01',
+                                    'min': '0'
+                                }}) }}
+                                <span class="input-icon">€</span>
+                            </div>
+                        </div>
+                        {% if form.salaire.vars.errors %}
+                            <span class="form-error">
+                                <span>⚠️</span>
+                                {% for error in form.salaire.vars.errors %}
+                                    {{ error.message }}
+                                {% endfor %}
+                            </span>
+                        {% else %}
+                            <span class="form-help">Le salaire mensuel de l'ouvrier</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.daten, null, {'label_attr': {'class': 'form-label'}}) }}
+                        <div class="input-wrapper">
+                            {{ form_widget(form.daten, {'attr': {
+                                'class': 'form-input'
+                            }}) }}
+                        </div>
+                        {% if form.daten.vars.errors %}
+                            <span class="form-error">
+                                <span>⚠️</span>
+                                {% for error in form.daten.vars.errors %}
+                                    {{ error.message }}
+                                {% endfor %}
+                            </span>
+                        {% else %}
+                            <span class="form-help">La date de naissance de l'ouvrier</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.grades, null, {'label_attr': {'class': 'form-label required'}}) }}
+                    <div class="input-wrapper">
+                        {{ form_widget(form.grades, {'attr': {
+                            'class': 'form-input',
+                            'placeholder': 'Ex: Ouvrier qualifié, Apprenti...'
+                        }}) }}
+                    </div>
+                    {% if form.grades.vars.errors %}
+                        <span class="form-error">
+                            <span>⚠️</span>
+                            {% for error in form.grades.vars.errors %}
+                                {{ error.message }}
+                            {% endfor %}
+                        </span>
+                    {% else %}
+                        <span class="form-help">Le grade ou qualification de l'ouvrier</span>
+                    {% endif %}
+                </div>
+
+                <!-- Aperçu en temps réel -->
+                <div class="success-preview" id="previewSection">
+                    <div class="preview-title">
+                        <span>👁️</span>
+                        Aperçu de l'ouvrier
+                    </div>
+                    <div class="preview-content">
+                        <div class="preview-avatar" id="previewAvatar">
+                            ??
+                        </div>
+                        <div class="preview-info">
+                            <div class="preview-name" id="previewName">Nom Prénom</div>
+                            <div class="preview-details">
+                                <span class="preview-salary" id="previewSalary">Salaire: 0,00 €</span>
+                                <span class="preview-grade" id="previewGrade">Grade: Non spécifié</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <div class="action-buttons">
+                        <button type="submit" class="btn-primary" id="submitButton">
+                            <span>✨</span>
+                            Créer l'Ouvrier
+                        </button>
+                        <a href="{{ path('app_ouvrier_index') }}" class="btn-secondary">
+                            <span>↶</span>
+                            Annuler
+                        </a>
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+
+<style>
+/* Styles cohérents avec les autres pages */
+.page-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    background-color: var(--bg-primary);
+    transition: var(--theme-transition);
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.page-subtitle {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+    line-height: 1.6;
+}
+
+.btn-secondary {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 0.875rem 2rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-secondary:hover {
+    background: var(--bg-secondary);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    color: var(--text-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.header-buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.breadcrumb a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.breadcrumb a:hover {
+    color: var(--primary-color);
+}
+
+.breadcrumb-separator {
+    color: var(--text-muted);
+}
+
+/* Form Container */
+.form-container {
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(10px);
+    transition: var(--theme-transition);
+    margin-bottom: 2rem;
+}
+
+.form-header {
+    background: var(--bg-tertiary);
+    padding: 2rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.form-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.form-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.form-subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.form-content {
+    padding: 2rem;
+}
+
+/* Form Layout */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.01em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-label.required::after {
+    content: " *";
+    color: var(--error-color);
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background: var(--bg-secondary);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    transform: translateY(-1px);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: var(--text-muted);
+}
+
+/* Input with icon */
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon .form-input {
+    padding-right: 3rem;
+}
+
+.input-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.form-help {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+.form-error {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--error-color);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    font-size: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(99, 102, 241, 0.5);
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* Success Preview */
+.success-preview {
+    background: rgba(16, 185, 129, 0.05);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    display: none;
+}
+
+.success-preview.visible {
+    display: block;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.preview-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--success-color);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.preview-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.preview-avatar {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    font-weight: bold;
+}
+
+.preview-info {
+    flex: 1;
+}
+
+.preview-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    font-size: 1.125rem;
+}
+
+.preview-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.preview-salary,
+.preview-grade {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.preview-salary {
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+.preview-grade {
+    color: var(--warning-color);
+}
+
+/* Form Validation States */
+.form-input.error,
+.form-textarea.error {
+    border-color: var(--error-color);
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+}
+
+.form-input.success,
+.form-textarea.success {
+    border-color: var(--success-color);
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .page-container {
+        padding: 2rem 1rem;
+    }
+
+    .page-title {
+        font-size: 2rem;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .header-buttons a {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .form-content {
+        padding: 1.5rem;
+    }
+
+    .form-header {
+        padding: 1.5rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .preview-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .preview-details {
+        align-items: center;
+    }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(99, 102, 241, 0.6);
+    }
+}
+
+.page-header,
+.form-container {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.form-group {
+    animation: slideIn 0.4s ease-out backwards;
+}
+
+.btn-primary {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.btn-primary:hover {
+    animation: none;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.ouvrier-create-form');
+    const nomInput = document.querySelector('#{{ form.nom.vars.id }}');
+    const prenomInput = document.querySelector('#{{ form.prenom.vars.id }}');
+    const salaireInput = document.querySelector('#{{ form.salaire.vars.id }}');
+    const gradeInput = document.querySelector('#{{ form.grades.vars.id }}');
+    const previewSection = document.getElementById('previewSection');
+    const previewAvatar = document.getElementById('previewAvatar');
+    const previewName = document.getElementById('previewName');
+    const previewSalary = document.getElementById('previewSalary');
+    const previewGrade = document.getElementById('previewGrade');
+    const submitButton = document.getElementById('submitButton');
+    
+    // Aperçu en temps réel
+    function updatePreview() {
+        const nom = nomInput.value.trim();
+        const prenom = prenomInput.value.trim();
+        const salaire = salaireInput.value.trim();
+        const grade = gradeInput.value.trim();
+        
+        if (nom || prenom || salaire || grade) {
+            previewSection.classList.add('visible');
+            
+            // Mettre à jour l'avatar
+            if (prenom && nom) {
+                previewAvatar.textContent = (prenom.charAt(0) + nom.charAt(0)).toUpperCase();
+            } else if (prenom) {
+                previewAvatar.textContent = prenom.charAt(0).toUpperCase();
+            } else if (nom) {
+                previewAvatar.textContent = nom.charAt(0).toUpperCase();
+            } else {
+                previewAvatar.textContent = '??';
+            }
+            
+            // Mettre à jour le nom
+            const fullName = `${prenom || 'Prénom'} ${nom || 'Nom'}`.trim();
+            previewName.textContent = fullName || 'Nom Prénom';
+            
+            // Mettre à jour le salaire
+            const salaireValue = salaire ? parseFloat(salaire).toLocaleString('fr-FR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }) : '0,00';
+            previewSalary.textContent = `Salaire: ${salaireValue} €`;
+            
+            // Mettre à jour le grade
+            previewGrade.textContent = `Grade: ${grade || 'Non spécifié'}`;
+        } else {
+            previewSection.classList.remove('visible');
+        }
+    }
+    
+    // Écouteurs d'événements pour l'aperçu
+    nomInput.addEventListener('input', updatePreview);
+    prenomInput.addEventListener('input', updatePreview);
+    salaireInput.addEventListener('input', updatePreview);
+    gradeInput.addEventListener('input', updatePreview);
+    
+    // Validation en temps réel
+    const inputs = form.querySelectorAll('.form-input, .form-textarea');
+    
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            validateField(this);
+        });
+        
+        input.addEventListener('input', function() {
+            if (this.classList.contains('error')) {
+                validateField(this);
+            }
+        });
+    });
+    
+    function validateField(field) {
+        const value = field.value.trim();
+        
+        // Réinitialiser les classes
+        field.classList.remove('error', 'success');
+        
+        if (field.hasAttribute('required') && !value) {
+            field.classList.add('error');
+            return false;
+        }
+        
+        // Validation spécifique pour le salaire
+        if (field.type === 'number' && field === salaireInput && value) {
+            const numValue = parseFloat(value);
+            if (isNaN(numValue) || numValue < 0) {
+                field.classList.add('error');
+                return false;
+            }
+        }
+        
+        if (value) {
+            field.classList.add('success');
+        }
+        
+        return true;
+    }
+    
+    // Validation du formulaire avant soumission
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        inputs.forEach(input => {
+            if (!validateField(input)) {
+                isValid = false;
+            }
+        });
+        
+        if (!isValid) {
+            e.preventDefault();
+            // Animation de secousse pour les champs invalides
+            const errorFields = form.querySelectorAll('.error');
+            errorFields.forEach(field => {
+                field.style.animation = 'shake 0.5s ease-in-out';
+                setTimeout(() => {
+                    field.style.animation = '';
+                }, 500);
+            });
+            
+            // Animation du bouton
+            submitButton.style.animation = 'shake 0.5s ease-in-out';
+            setTimeout(() => {
+                submitButton.style.animation = 'pulse 2s ease-in-out infinite';
+            }, 500);
+        } else {
+            // Animation de succès
+            submitButton.innerHTML = '<span>⏳</span> Création en cours...';
+            submitButton.disabled = true;
+        }
+    });
+    
+    // Animation de secousse
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        @keyframes success {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Initialiser l'aperçu
+    updatePreview();
+});
+</script>
+{% endblock %}

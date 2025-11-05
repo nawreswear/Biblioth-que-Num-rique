@@ -1,0 +1,1421 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paramètres - GNLT Bibliothèque{% endblock %}
+
+{% block body %}
+<div class="settings-container">
+    <div class="settings-header">
+        <div class="header-content">
+            <h1 class="page-title">⚙️ Paramètres</h1>
+            <p class="page-subtitle">Gérez les paramètres de votre application</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn-secondary" id="resetSettings">
+                <span class="icon">🔄</span>
+                Réinitialiser
+            </button>
+            <button class="btn-primary" id="saveSettings">
+                <span class="icon">💾</span>
+                Enregistrer
+            </button>
+        </div>
+    </div>
+
+    <div class="settings-layout">
+        {# Navigation des onglets #}
+        <div class="settings-sidebar">
+            <nav class="settings-nav">
+                <button class="settings-nav-item active" data-tab="profile">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-label">Profil</span>
+                </button>
+                <button class="settings-nav-item" data-tab="security">
+                    <span class="nav-icon">🔒</span>
+                    <span class="nav-label">Sécurité</span>
+                </button>
+                <button class="settings-nav-item" data-tab="notifications">
+                    <span class="nav-icon">🔔</span>
+                    <span class="nav-label">Notifications</span>
+                    <span class="nav-badge">2</span>
+                </button>
+                <button class="settings-nav-item" data-tab="appearance">
+                    <span class="nav-icon">🎨</span>
+                    <span class="nav-label">Apparence</span>
+                </button>
+                <button class="settings-nav-item" data-tab="system">
+                    <span class="nav-icon">⚡</span>
+                    <span class="nav-label">Système</span>
+                </button>
+                <button class="settings-nav-item" data-tab="integrations">
+                    <span class="nav-icon">🔗</span>
+                    <span class="nav-label">Intégrations</span>
+                </button>
+                <button class="settings-nav-item" data-tab="advanced">
+                    <span class="nav-icon">🛠️</span>
+                    <span class="nav-label">Avancé</span>
+                </button>
+            </nav>
+        </div>
+
+        {# Contenu des onglets #}
+        <div class="settings-content">
+            {# Onglet Profil #}
+            <div class="settings-tab active" id="profile-tab">
+                <div class="settings-section">
+                    <h2 class="section-title">Informations Personnelles</h2>
+
+                    <div class="profile-header">
+                        <div class="avatar-container">
+                            <div class="avatar-large">AD</div>
+                            <button class="avatar-upload">
+                                <span class="icon">📷</span>
+                                Changer
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Nom complet</label>
+                            <input type="text" class="form-input" value="Administrateur" placeholder="Votre nom">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" value="admin@gnlt.com" placeholder="votre@email.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Téléphone</label>
+                            <input type="tel" class="form-input" value="+216 12 345 678" placeholder="+216 XX XXX XXX">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Rôle</label>
+                            <select class="form-select">
+                                <option selected>Administrateur</option>
+                                <option>Gestionnaire</option>
+                                <option>Bibliothécaire</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 class="section-title">Informations Supplémentaires</h2>
+                    <div class="form-group">
+                        <label class="form-label">Bio</label>
+                        <textarea class="form-textarea" rows="4" placeholder="Parlez-nous de vous...">Administrateur principal du système de gestion de bibliothèque GNLT</textarea>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Langue</label>
+                            <select class="form-select">
+                                <option selected>Français</option>
+                                <option>العربية</option>
+                                <option>English</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Fuseau horaire</label>
+                            <select class="form-select">
+                                <option selected>UTC+1 (Tunis)</option>
+                                <option>UTC+0 (London)</option>
+                                <option>UTC+2 (Cairo)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Onglet Sécurité #}
+            <div class="settings-tab" id="security-tab">
+                <div class="settings-section">
+                    <h2 class="section-title">Mot de passe</h2>
+
+                    <div class="form-group">
+                        <label class="form-label">Mot de passe actuel</label>
+                        <input type="password" class="form-input" placeholder="••••••••">
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Nouveau mot de passe</label>
+                            <input type="password" class="form-input" placeholder="••••••••">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Confirmer le mot de passe</label>
+                            <input type="password" class="form-input" placeholder="••••••••">
+                        </div>
+                    </div>
+
+                    <div class="password-strength">
+                        <div class="strength-label">Force du mot de passe</div>
+                        <div class="strength-bar">
+                            <div class="strength-fill medium"></div>
+                        </div>
+                        <span class="strength-text">Moyen</span>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 class="section-title">Authentification à deux facteurs</h2>
+                    <div class="toggle-setting">
+                        <div class="toggle-info">
+                            <h3 class="toggle-title">Activer 2FA</h3>
+                            <p class="toggle-description">Ajoutez une couche de sécurité supplémentaire à votre compte</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 class="section-title">Sessions actives</h2>
+                    <div class="sessions-list">
+                        <div class="session-item current">
+                            <div class="session-icon">💻</div>
+                            <div class="session-info">
+                                <h4 class="session-name">Windows - Chrome</h4>
+                                <p class="session-details">Sfax, Tunisia • Actif maintenant</p>
+                                <span class="session-badge current">Session actuelle</span>
+                            </div>
+                        </div>
+
+                        <div class="session-item">
+                            <div class="session-icon">📱</div>
+                            <div class="session-info">
+                                <h4 class="session-name">Android - Mobile App</h4>
+                                <p class="session-details">Sfax, Tunisia • Il y a 2 heures</p>
+                            </div>
+                            <button class="btn-danger-outline btn-small">Déconnecter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Onglet Notifications #}
+            <div class="settings-tab" id="notifications-tab">
+                <div class="settings-section">
+                    <h2 class="section-title">Préférences de notification</h2>
+
+                    <div class="notification-group">
+                        <h3 class="group-title">📚 Activités de la bibliothèque</h3>
+
+                        <div class="toggle-setting">
+                            <div class="toggle-info">
+                                <h4 class="toggle-title">Nouveaux livres</h4>
+                                <p class="toggle-description">Recevoir une notification lors de l'ajout d'un nouveau livre</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="toggle-setting">
+                            <div class="toggle-info">
+                                <h4 class="toggle-title">Prêts en retard</h4>
+                                <p class="toggle-description">Alerte pour les livres non retournés à temps</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="toggle-setting">
+                            <div class="toggle-info">
+                                <h4 class="toggle-title">Stock faible</h4>
+                                <p class="toggle-description">Notification quand le stock d'un livre est bas</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="notification-group">
+                        <h3 class="group-title">⚙️ Système</h3>
+
+                        <div class="toggle-setting">
+                            <div class="toggle-info">
+                                <h4 class="toggle-title">Mises à jour du système</h4>
+                                <p class="toggle-description">Notifications des nouvelles versions</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="toggle-setting">
+                            <div class="toggle-info">
+                                <h4 class="toggle-title">Sauvegardes automatiques</h4>
+                                <p class="toggle-description">Confirmation des sauvegardes réussies</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 class="section-title">Canaux de notification</h2>
+
+                    <div class="channels-grid">
+                        <div class="channel-card">
+                            <div class="channel-icon">📧</div>
+                            <h4 class="channel-name">Email</h4>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="channel-card">
+                            <div class="channel-icon">💬</div>
+                            <h4 class="channel-name">SMS</h4>
+                            <label class="toggle-switch">
+                                <input type="checkbox">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="channel-card">
+                            <div class="channel-icon">🔔</div>
+                            <h4 class="channel-name">Push</h4>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Onglet Apparence #}
+            <div class="settings-tab" id="appearance-tab">
+                <div class="settings-section">
+                    <h2 class="section-title">Thème</h2>
+
+                    <div class="theme-selector">
+                        <div class="theme-option active" data-theme="light">
+                            <div class="theme-preview light">
+                                <div class="preview-header"></div>
+                                <div class="preview-content"></div>
+                            </div>
+                            <span class="theme-label">☀️ Clair</span>
+                        </div>
+
+                        <div class="theme-option" data-theme="dark">
+                            <div class="theme-preview dark">
+                                <div class="preview-header"></div>
+                                <div class="preview-content"></div>
+                            </div>
+                            <span class="theme-label">🌙 Sombre</span>
+                        </div>
+
+                        <div class="theme-option" data-theme="auto">
+                            <div class="theme-preview auto">
+                                <div class="preview-header"></div>
+                                <div class="preview-content"></div>
+                            </div>
+                            <span class="theme-label">🔄 Auto</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 class="section-title">Couleur d'accent</h2>
+
+                    <div class="color-picker-grid">
+                        <button class="color-option active" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)"></button>
+                        <button class="color-option" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"></button>
+                        <button class="color-option" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"></button>
+                        <button class="color-option" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"></button>
+                        <button class="color-option" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%)"></button>
+                        <button class="color-option" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%)"></button>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 class="section-title">Affichage</h2>
+
+                    <div class="form-group">
+                        <label class="form-label">Taille de la police</label>
+                        <div class="slider-container">
+                            <input type="range" class="form-slider" min="12" max="18" value="14">
+                            <span class="slider-value">14px</span>
+                        </div>
+                    </div>
+
+                    <div class="toggle-setting">
+                        <div class="toggle-info">
+                            <h4 class="toggle-title">Mode compact</h4>
+                            <p class="toggle-description">Réduire l'espacement entre les éléments</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-setting">
+                        <div class="toggle-info">
+                            <h4 class="toggle-title">Animations</h4>
+                            <p class="toggle-description">Activer les transitions et animations</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            {# Onglet Système #}
+            <div class="settings-tab" id="system-tab">
+                <div class="settings-section">
+                    <h2 class="section-title">Informations système</h2>
+
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-icon">📦</div>
+                            <div class="info-content">
+                                <span class="info-label">Version</span>
+                                <span class="info-value">1.0.0</span>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-icon">💾</div>
+                            <div class="info-content">
+                                <span class="info-label">Stockage</span>
+                                <span class="info-value">850 MB / 1 GB</span>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-icon">📊</div>
+                            <div class="info-content">
+                                <span class="info-label">Base de données</span>
+                                <span class="info-value">PostgreSQL 14</span>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-icon">🔄</div>
+                            <div class="info-content">
+                                <span class="info-label">Dernière sauvegarde</span>
+                                <span class="info-value">Il y a 2 heures</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 class="section-title">Maintenance</h2>
+
+                    <div class="action-list">
+                        <div class="action-item">
+                            <div class="action-info">
+                                <h4 class="action-title">Sauvegarder la base de données</h4>
+                                <p class="action-description">Créer une copie de sécurité complète</p>
+                            </div>
+                            <button class="btn-primary-outline">
+                                <span class="icon">💾</span>
+                                Sauvegarder
+                            </button>
+                        </div>
+
+                        <div class="action-item">
+                            <div class="action-info">
+                                <h4 class="action-title">Optimiser la base</h4>
+                                <p class="action-description">Améliorer les performances de la base de données</p>
+                            </div>
+                            <button class="btn-primary-outline">
+                                <span class="icon">⚡</span>
+                                Optimiser
+                            </button>
+                        </div>
+
+                        <div class="action-item">
+                            <div class="action-info">
+                                <h4 class="action-title">Vider le cache</h4>
+                                <p class="action-description">Supprimer les fichiers temporaires</p>
+                            </div>
+                            <button class="btn-secondary-outline">
+                                <span class="icon">🗑️</span>
+                                Vider
+                            </button>
+                        </div>
+
+                        <div class="action-item danger">
+                            <div class="action-info">
+                                <h4 class="action-title">Réinitialiser l'application</h4>
+                                <p class="action-description">Restaurer les paramètres par défaut (irréversible)</p>
+                            </div>
+                            <button class="btn-danger-outline">
+                                <span class="icon">⚠️</span>
+                                Réinitialiser
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 class="section-title">Mises à jour automatiques</h2>
+
+                    <div class="toggle-setting">
+                        <div class="toggle-info">
+                            <h4 class="toggle-title">Activer les mises à jour auto</h4>
+                            <p class="toggle-description">Télécharger et installer automatiquement les nouvelles versions</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="update-info">
+                        <div class="update-status success">
+                            <span class="status-icon">✅</span>
+                            <span class="status-text">Vous utilisez la dernière version</span>
+                        </div>
+                        <button class="btn-secondary-outline">Vérifier les mises à jour</button>
+                    </div>
+                </div>
+            </div>
+
+            {# Onglet Intégrations #}
+            <div class="settings-tab" id="integrations-tab">
+                <div class="settings-section">
+                    <h2 class="section-title">Services connectés</h2>
+
+                    <div class="integrations-grid">
+                        <div class="integration-card connected">
+                            <div class="integration-header">
+                                <div class="integration-icon">📧</div>
+                                <span class="integration-status">Connecté</span>
+                            </div>
+                            <h3 class="integration-name">Service Email</h3>
+                            <p class="integration-description">Envoi automatique de notifications par email</p>
+                            <button class="btn-danger-outline btn-small">Déconnecter</button>
+                        </div>
+
+                        <div class="integration-card">
+                            <div class="integration-header">
+                                <div class="integration-icon">☁️</div>
+                                <span class="integration-status inactive">Non connecté</span>
+                            </div>
+                            <h3 class="integration-name">Cloud Storage</h3>
+                            <p class="integration-description">Sauvegarde automatique dans le cloud</p>
+                            <button class="btn-primary-outline btn-small">Connecter</button>
+                        </div>
+
+                        <div class="integration-card">
+                            <div class="integration-header">
+                                <div class="integration-icon">📊</div>
+                                <span class="integration-status inactive">Non connecté</span>
+                            </div>
+                            <h3 class="integration-name">Analytics</h3>
+                            <p class="integration-description">Suivi et analyse des statistiques</p>
+                            <button class="btn-primary-outline btn-small">Connecter</button>
+                        </div>
+
+                        <div class="integration-card connected">
+                            <div class="integration-header">
+                                <div class="integration-icon">💬</div>
+                                <span class="integration-status">Connecté</span>
+                            </div>
+                            <h3 class="integration-name">SMS Gateway</h3>
+                            <p class="integration-description">Envoi de SMS aux utilisateurs</p>
+                            <button class="btn-danger-outline btn-small">Déconnecter</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 class="section-title">API & Webhooks</h2>
+
+                    <div class="api-section">
+                        <div class="api-key-container">
+                            <label class="form-label">Clé API</label>
+                            <div class="api-key-input-group">
+                                <input type="text" class="form-input" value="gnlt_sk_live_abc123xyz789" readonly>
+                                <button class="btn-icon" title="Copier">📋</button>
+                                <button class="btn-icon" title="Régénérer">🔄</button>
+                            </div>
+                        </div>
+
+                        <div class="webhooks-list">
+                            <h4 class="subsection-title">Webhooks actifs</h4>
+                            <div class="webhook-item">
+                                <div class="webhook-info">
+                                    <span class="webhook-url">https://api.example.com/webhook</span>
+                                    <span class="webhook-events">Nouveaux livres, Prêts</span>
+                                </div>
+                                <button class="btn-danger-text">Supprimer</button>
+                            </div>
+                            <button class="btn-primary-outline btn-small">+ Ajouter un webhook</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Onglet Avancé #}
+            <div class="settings-tab" id="advanced-tab">
+                <div class="settings-section">
+                    <h2 class="section-title">Options avancées</h2>
+
+                    <div class="toggle-setting">
+                        <div class="toggle-info">
+                            <h4 class="toggle-title">Mode développeur</h4>
+                            <p class="toggle-description">Activer les fonctionnalités de débogage</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-setting">
+                        <div class="toggle-info">
+                            <h4 class="toggle-title">Logs détaillés</h4>
+                            <p class="toggle-description">Enregistrer tous les événements système</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Niveau de log</label>
+                        <select class="form-select">
+                            <option>ERROR</option>
+                            <option selected>WARNING</option>
+                            <option>INFO</option>
+                            <option>DEBUG</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 class="section-title">Performances</h2>
+
+                    <div class="form-group">
+                        <label class="form-label">Nombre d'éléments par page</label>
+                        <select class="form-select">
+                            <option>10</option>
+                            <option>25</option>
+                            <option selected>50</option>
+                            <option>100</option>
+                        </select>
+                    </div>
+
+                    <div class="toggle-setting">
+                        <div class="toggle-info">
+                            <h4 class="toggle-title">Préchargement des données</h4>
+                            <p class="toggle-description">Charger les données en arrière-plan pour une navigation plus rapide</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-setting">
+                        <div class="toggle-info">
+                            <h4 class="toggle-title">Compression des images</h4>
+                            <p class="toggle-description">Optimiser automatiquement les images uploadées</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h2 class="section-title">Export de données</h2>
+
+                    <div class="export-options">
+                        <p class="section-description">Téléchargez toutes vos données dans différents formats</p>
+
+                        <div class="export-buttons">
+                            <button class="export-btn">
+                                <span class="export-icon">📄</span>
+                                <span class="export-label">CSV</span>
+                            </button>
+                            <button class="export-btn">
+                                <span class="export-icon">📊</span>
+                                <span class="export-label">Excel</span>
+                            </button>
+                            <button class="export-btn">
+                                <span class="export-icon">📋</span>
+                                <span class="export-label">JSON</span>
+                            </button>
+                            <button class="export-btn">
+                                <span class="export-icon">📝</span>
+                                <span class="export-label">PDF</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section danger-zone">
+                    <h2 class="section-title">Zone dangereuse</h2>
+
+                    <div class="danger-actions">
+                        <div class="danger-item">
+                            <div class="danger-info">
+                                <h4 class="danger-title">Supprimer toutes les données</h4>
+                                <p class="danger-description">Cette action est irréversible et supprimera toutes vos données</p>
+                            </div>
+                            <button class="btn-danger">Supprimer tout</button>
+                        </div>
+
+                        <div class="danger-item">
+                            <div class="danger-info">
+                                <h4 class="danger-title">Supprimer le compte</h4>
+                                <p class="danger-description">Fermer définitivement votre compte administrateur</p>
+                            </div>
+                            <button class="btn-danger">Supprimer le compte</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.settings-container {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 0.5rem 0;
+}
+
+.page-subtitle {
+    color: #6b7280;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn-primary, .btn-secondary {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+    background: white;
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+
+.btn-secondary:hover {
+    background: #f9fafb;
+}
+
+.settings-layout {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 2rem;
+}
+
+.settings-sidebar {
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+}
+
+.settings-nav {
+    background: white;
+    border-radius: 12px;
+    padding: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.settings-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border: none;
+    background: none;
+    color: #6b7280;
+    width: 100%;
+    text-align: left;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-bottom: 0.25rem;
+}
+
+.settings-nav-item:hover {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.settings-nav-item.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.nav-icon {
+    font-size: 1.2rem;
+}
+
+.nav-label {
+    flex: 1;
+    font-weight: 500;
+}
+
+.nav-badge {
+    background: #ef4444;
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.settings-nav-item.active .nav-badge {
+    background: rgba(255,255,255,0.3);
+}
+
+.settings-content {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.settings-tab {
+    display: none;
+}
+
+.settings-tab.active {
+    display: block;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.settings-section {
+    margin-bottom: 3rem;
+}
+
+.settings-section:last-child {
+    margin-bottom: 0;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 1.5rem 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.profile-header {
+    margin-bottom: 2rem;
+}
+
+.avatar-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.avatar-large {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.avatar-upload {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.avatar-upload:hover {
+    background: #f9fafb;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+.form-input, .form-select, .form-textarea {
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    font-family: inherit;
+}
+
+.toggle-setting {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+    background: #f9fafb;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.toggle-info {
+    flex: 1;
+}
+
+.toggle-title {
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 0.25rem 0;
+    font-size: 0.95rem;
+}
+
+.toggle-description {
+    color: #6b7280;
+    margin: 0;
+    font-size: 0.85rem;
+}
+
+.toggle-switch {
+    position: relative;
+    width: 50px;
+    height: 26px;
+    flex-shrink: 0;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #d1d5db;
+    transition: 0.4s;
+    border-radius: 26px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(24px);
+}
+
+.password-strength {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f9fafb;
+    border-radius: 8px;
+}
+
+.strength-label {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+}
+
+.strength-bar {
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.strength-fill {
+    height: 100%;
+    transition: width 0.3s;
+}
+
+.strength-fill.weak {
+    width: 33%;
+    background: #ef4444;
+}
+
+.strength-fill.medium {
+    width: 66%;
+    background: #f59e0b;
+}
+
+.strength-fill.strong {
+    width: 100%;
+    background: #10b981;
+}
+
+.strength-text {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.sessions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.session-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+.session-item:hover {
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+.session-item.current {
+    background: #f0f4ff;
+    border-color: #667eea;
+}
+
+.session-icon {
+    font-size: 2rem;
+}
+
+.session-info {
+    flex: 1;
+}
+
+.session-name {
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 0.25rem 0;
+}
+
+.session-details {
+    color: #6b7280;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.session-badge {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background: #667eea;
+    color: white;
+    font-size: 0.75rem;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.notification-group {
+    margin-bottom: 2rem;
+}
+
+.group-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 1rem 0;
+}
+
+.channels-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.channel-card {
+    padding: 1.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.channel-card:hover {
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+.channel-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.channel-name {
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 1rem 0;
+}
+
+.theme-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.theme-option {
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.theme-preview {
+    height: 120px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    margin-bottom: 0.75rem;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: all 0.3s;
+}
+
+.theme-option.active .theme-preview {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.theme-preview.light {
+    background: white;
+}
+
+.theme-preview.dark {
+    background: #1f2937;
+}
+
+.theme-preview.auto {
+    background: linear-gradient(135deg, white 0%, white 50%, #1f2937 50%, #1f2937 100%);
+}
+
+.preview-header {
+    height: 20px;
+    background: #e5e7eb;
+    border-radius: 4px;
+}
+
+.theme-preview.dark .preview-header {
+    background: #374151;
+}
+
+.preview-content {
+    flex: 1;
+    background: #f3f4f6;
+    border-radius: 4px;
+}
+
+.theme-preview.dark .preview-content {
+    background: #4b5563;
+}
+
+.theme-label {
+    font-weight: 500;
+    color: #374151;
+}
+
+.color-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1rem;
+}
+
+.color-option {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.color-option:hover {
+    transform: scale(1.1);
+}
+
+.color-option.active {
+    border-color: #1f2937;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.form-slider {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: #e5e7eb;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.form-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    cursor: pointer;
+}
+
+.form-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    cursor: pointer;
+    border: none;
+}
+
+.slider-value {
+    font-weight: 600;
+    color: #667eea;
+    min-width: 50px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.info-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: #f9fafb;
+    border-radius: 10px;
+}
+
+.info-icon {
+    font-size: 2rem;
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-label {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+}
+
+.info-value {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.action-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.action-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+.action-item.danger {
+    border-color: #fee2e2;
+    background: #fef2f2;
+}
+
+.action-info {
+    flex: 1;
+}
+
+.action-title {
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 0.25rem 0;
+}
+
+.action-description {
+    color: #6b7280;
+    margin: 0;
+    font-size: 0.85rem;
+}
+
+.btn-primary-outline, .btn-secondary-outline, .btn-danger-outline {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: white;
+}
+
+.btn-primary-outline {
+    border: 1px solid #667eea;
+    color: #667eea;
+}
+
+.btn-primary-outline:hover {
+    background: #667eea;
+    color: white;
+}
+
+.btn-secondary-outline {
+    border: 1px solid #d1d5db;
+    color: #374151;
+}
+
+.btn-secondary-outline:hover {
+    background: #f9fafb;
+}
+
+.btn-danger-outline {
+    border: 1px solid #ef4444;
+    color: #ef4444;
+}
+.btn-danger-outline:hover {
+    background: #ef4444;
+    color: white;
+}
+.btn-small {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+}
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #6b7280;
+    transition: color 0.3s;
+}
+.btn-icon:hover {
+    color: #374151;
+}
+</style>
+</html>
+{% endblock %}

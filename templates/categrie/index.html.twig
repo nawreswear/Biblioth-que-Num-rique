@@ -1,0 +1,672 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Catégories{% endblock %}
+
+{% block body %}
+<style>
+    .page-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+        background-color: var(--bg-primary);
+        transition: var(--theme-transition);
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2.5rem;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        letter-spacing: -0.5px;
+    }
+
+    .page-subtitle {
+        font-size: 1.125rem;
+        color: var(--text-secondary);
+        margin-top: 0.5rem;
+        line-height: 1.6;
+    }
+
+    .btn-create {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 0.875rem 2rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-create:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(99, 102, 241, 0.5);
+        color: white;
+    }
+
+    .btn-secondary {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        padding: 0.875rem 2rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-secondary:hover {
+        background: var(--bg-secondary);
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+        color: var(--text-primary);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-buttons {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+        font-size: 0.875rem;
+        color: var(--text-muted);
+    }
+
+    .breadcrumb a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .breadcrumb a:hover {
+        color: var(--primary-color);
+    }
+
+    .breadcrumb-separator {
+        color: var(--text-muted);
+    }
+
+    /* Table Container */
+    .table-container {
+        background: var(--bg-secondary);
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-lg);
+        backdrop-filter: blur(10px);
+        transition: var(--theme-transition);
+        margin-bottom: 2rem;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table {
+        width: 100%;
+        margin: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: var(--bg-secondary);
+    }
+
+    .table thead {
+        background: rgba(99, 102, 241, 0.1);
+        border-bottom: 2px solid rgba(99, 102, 241, 0.3);
+    }
+
+    .table thead th {
+        padding: 1.25rem 1.5rem;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-secondary);
+        border: none;
+        white-space: nowrap;
+    }
+
+    .table tbody tr {
+        border-bottom: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+        background: var(--bg-secondary);
+    }
+
+    .table tbody tr:hover {
+        background: var(--bg-tertiary);
+        transform: translateX(4px);
+    }
+
+    .table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .table tbody td {
+        padding: 1.25rem 1.5rem;
+        color: var(--text-primary);
+        font-size: 0.95rem;
+        border: none;
+        vertical-align: middle;
+    }
+
+    .table tbody td:first-child {
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+
+    /* Category Elements */
+    .designation-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        color: white;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        gap: 0.5rem;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
+
+    .id-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        background: rgba(99, 102, 241, 0.1);
+        color: var(--primary-color);
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        gap: 0.375rem;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.875rem;
+        transition: all 0.3s ease;
+        border: 1px solid;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        white-space: nowrap;
+    }
+
+    .btn-show {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-show:hover {
+        background: rgba(59, 130, 246, 0.2);
+        border-color: rgba(59, 130, 246, 0.5);
+        transform: translateY(-2px);
+        color: #60a5fa;
+    }
+
+    .btn-edit {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+        border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-edit:hover {
+        background: rgba(16, 185, 129, 0.2);
+        border-color: rgba(16, 185, 129, 0.5);
+        transform: translateY(-2px);
+        color: #34d399;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: var(--text-muted);
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .empty-state-text {
+        font-size: 1.25rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: var(--text-secondary);
+    }
+
+    .empty-state-subtext {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        margin-bottom: 2rem;
+    }
+
+    .empty-state-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.875rem 1.5rem;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .empty-state-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        color: white;
+    }
+
+    /* Stats Cards */
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary-color);
+    }
+
+    .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .page-container {
+            padding: 2rem 1rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+        }
+
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .header-buttons {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .header-buttons a {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .stats-container {
+            grid-template-columns: 1fr;
+        }
+
+        .table thead th,
+        .table tbody td {
+            padding: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .btn-action {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .table-responsive {
+            border-radius: 12px;
+        }
+        
+        .table thead {
+            display: none;
+        }
+        
+        .table tbody tr {
+            display: block;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+        
+        .table tbody td {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .table tbody td:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .table tbody td::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .action-buttons {
+            justify-content: center;
+        }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .page-header,
+    .stats-container,
+    .table-container {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .table tbody tr {
+        animation: slideIn 0.4s ease-out backwards;
+    }
+
+    .table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+    .table tbody tr:nth-child(2) { animation-delay: 0.2s; }
+    .table tbody tr:nth-child(3) { animation-delay: 0.3s; }
+    .table tbody tr:nth-child(4) { animation-delay: 0.4s; }
+    .table tbody tr:nth-child(5) { animation-delay: 0.5s; }
+</style>
+
+<div class="page-container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+        <a href="{{ path('app_home') }}">
+            <span>🏠</span>
+            Accueil
+        </a>
+        <span class="breadcrumb-separator">›</span>
+        <span>📂 Catégories</span>
+    </nav>
+
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">📂 Gestion des Catégories</h1>
+            <p class="page-subtitle">Organisez vos livres par catégories</p>
+        </div>
+        <div class="header-buttons">
+            <a href="{{ path('app_categrie_new') }}" class="btn-create">
+                <span>➕</span>
+                Créer une Catégorie
+            </a>
+            <a href="{{ path('app_home') }}" class="btn-secondary">
+                <span>←</span>
+                Retour à l'accueil
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-container">
+        <div class="stat-card">
+            <span class="stat-icon">📂</span>
+            <div class="stat-value">{{ categries|length }}</div>
+            <div class="stat-label">Total des Catégories</div>
+        </div>
+        
+        <div class="stat-card">
+            <span class="stat-icon">🏷️</span>
+            <div class="stat-value">
+                {% set totalChars = 0 %}
+                {% for categrie in categries %}
+                    {% set totalChars = totalChars + categrie.designation|length %}
+                {% endfor %}
+                {{ totalChars }}
+            </div>
+            <div class="stat-label">Caractères Total</div>
+        </div>
+        
+        <div class="stat-card">
+            <span class="stat-icon">📊</span>
+            <div class="stat-value">
+                {% if categries|length > 0 %}
+                    {{ (totalChars / categries|length)|round(1) }}
+                {% else %}
+                    0
+                {% endif %}
+            </div>
+            <div class="stat-label">Longueur Moyenne</div>
+        </div>
+        
+        <div class="stat-card">
+            <span class="stat-icon">⭐</span>
+            <div class="stat-value">
+                {% if categries|length > 0 %}
+                    {{ categries|length }}
+                {% else %}
+                    0
+                {% endif %}
+            </div>
+            <div class="stat-label">Catégories Actives</div>
+        </div>
+    </div>
+
+    <!-- Categories Table -->
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table" id="categoriesTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Désignation</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for categrie in categries %}
+                    <tr>
+                        <td data-label="ID">
+                            <span class="id-badge">
+                                <span>#</span>
+                                {{ categrie.id }}
+                            </span>
+                        </td>
+                        <td data-label="Désignation">
+                            <span class="designation-badge">
+                                <span>🏷️</span>
+                                {{ categrie.designation }}
+                            </span>
+                        </td>
+                        <td data-label="Actions">
+                            <div class="action-buttons">
+                                <a href="{{ path('app_categrie_show', {'id': categrie.id}) }}" class="btn-action btn-show" title="Voir les détails">
+                                    <span>👁️</span>
+                                    Voir
+                                </a>
+                                <a href="{{ path('app_categrie_edit', {'id': categrie.id}) }}" class="btn-action btn-edit" title="Modifier la catégorie">
+                                    <span>✏️</span>
+                                    Modifier
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📂</div>
+                                <div class="empty-state-text">Aucune catégorie trouvée</div>
+                                <div class="empty-state-subtext">Commencez par créer votre première catégorie</div>
+                                <a href="{{ path('app_categrie_new') }}" class="empty-state-action">
+                                    <span>➕</span>
+                                    Créer ma première catégorie
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Export Section -->
+    {% if categries|length > 0 %}
+    <div style="text-align: center; margin-top: 2rem;">
+        <div style="color: var(--text-secondary); font-size: 0.875rem;">
+            Affichage de <strong>{{ categries|length }}</strong> catégor{{ categries|length > 1 ? 'ies' : 'ie' }} au total
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add data-labels for mobile responsive
+    function addDataLabels() {
+        if (window.innerWidth <= 640) {
+            const table = document.getElementById('categoriesTable');
+            const headers = Array.from(table.querySelectorAll('thead th'));
+            const rows = table.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                cells.forEach((cell, index) => {
+                    if (headers[index]) {
+                        cell.setAttribute('data-label', headers[index].textContent);
+                    }
+                });
+            });
+        }
+    }
+
+    // Initialize data labels
+    addDataLabels();
+    
+    // Update on resize
+    window.addEventListener('resize', addDataLabels);
+
+    // Add hover effects
+    const rows = document.querySelectorAll('#categoriesTable tbody tr');
+    rows.forEach(row => {
+        if (!row.querySelector('.empty-state')) {
+            row.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(8px)';
+            });
+            
+            row.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+            });
+        }
+    });
+
+    // Add loading animation
+    const tableBody = document.querySelector('#categoriesTable tbody');
+    if (tableBody) {
+        tableBody.style.opacity = '0';
+        setTimeout(() => {
+            tableBody.style.transition = 'opacity 0.5s ease';
+            tableBody.style.opacity = '1';
+        }, 300);
+    }
+});
+</script>
+{% endblock %}

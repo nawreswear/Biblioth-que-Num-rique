@@ -1,0 +1,728 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du Livre{% endblock %}
+
+{% block body %}
+<style>
+    .page-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+        background-color: var(--bg-primary);
+        transition: var(--theme-transition);
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2.5rem;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        letter-spacing: -0.5px;
+    }
+
+    .page-subtitle {
+        font-size: 1.125rem;
+        color: var(--text-secondary);
+        margin-top: 0.5rem;
+        line-height: 1.6;
+    }
+
+    .btn-secondary {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        padding: 0.875rem 2rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-secondary:hover {
+        background: var(--bg-secondary);
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+        color: var(--text-primary);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-buttons {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+        font-size: 0.875rem;
+        color: var(--text-muted);
+    }
+
+    .breadcrumb a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .breadcrumb a:hover {
+        color: var(--primary-color);
+    }
+
+    .breadcrumb-separator {
+        color: var(--text-muted);
+    }
+
+    /* Detail Container */
+    .detail-container {
+        background: var(--bg-secondary);
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-lg);
+        backdrop-filter: blur(10px);
+        transition: var(--theme-transition);
+        margin-bottom: 2rem;
+    }
+
+    .detail-header {
+        background: var(--bg-tertiary);
+        padding: 2rem;
+        border-bottom: 1px solid var(--border-color);
+        text-align: center;
+    }
+
+    .detail-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .detail-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0 0 0.5rem 0;
+    }
+
+    .detail-subtitle {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    .detail-content {
+        padding: 2rem;
+    }
+
+    /* Detail Table */
+    .detail-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .detail-table tr {
+        border-bottom: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+    }
+
+    .detail-table tr:hover {
+        background: var(--bg-tertiary);
+    }
+
+    .detail-table tr:last-child {
+        border-bottom: none;
+    }
+
+    .detail-table th {
+        text-align: left;
+        padding: 1.25rem 1.5rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        width: 30%;
+        background: var(--bg-tertiary);
+    }
+
+    .detail-table td {
+        padding: 1.25rem 1.5rem;
+        color: var(--text-primary);
+        font-size: 1rem;
+    }
+
+    /* Status Badges */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        gap: 0.5rem;
+    }
+
+    .status-high {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success-color);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .status-medium {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--warning-color);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .status-low {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--error-color);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .price-tag {
+        font-weight: 700;
+        color: var(--success-color);
+        font-size: 1.125rem;
+    }
+
+    .isbn-code {
+        font-family: 'Courier New', monospace;
+        background: var(--bg-tertiary);
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        border: 1px solid var(--border-color);
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 2.5rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border-color);
+        flex-wrap: wrap;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(99, 102, 241, 0.5);
+        color: white;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, var(--error-color) 0%, #dc2626 100%);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(239, 68, 68, 0.5);
+        color: white;
+    }
+
+    .action-group {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    /* Delete Form Styles for Show Page */
+    .delete-form {
+        display: inline-block;
+    }
+
+    .delete-form form {
+        margin: 0;
+        display: inline;
+    }
+
+    .delete-btn {
+        background: linear-gradient(135deg, var(--error-color) 0%, #dc2626 100%);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        font-size: 1rem;
+        font-family: inherit;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .delete-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .delete-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(239, 68, 68, 0.5);
+        color: white;
+    }
+
+    .delete-btn:hover::before {
+        left: 100%;
+    }
+
+    .delete-btn:active {
+        transform: translateY(0);
+    }
+
+    .delete-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Delete confirmation modal */
+    .delete-confirm-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+
+    .delete-confirm-content {
+        background: var(--bg-secondary);
+        border-radius: 16px;
+        padding: 2rem;
+        max-width: 400px;
+        width: 90%;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-lg);
+        text-align: center;
+    }
+
+    .delete-confirm-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .delete-confirm-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--error-color);
+        margin-bottom: 1rem;
+    }
+
+    .delete-confirm-message {
+        color: var(--text-secondary);
+        margin-bottom: 2rem;
+        line-height: 1.5;
+    }
+
+    .delete-confirm-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .confirm-delete-btn {
+        background: linear-gradient(135deg, var(--error-color) 0%, #dc2626 100%);
+        color: white;
+        padding: 0.875rem 1.5rem;
+        border-radius: 10px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .confirm-delete-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+
+    .cancel-delete-btn {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        padding: 0.875rem 1.5rem;
+        border-radius: 10px;
+        border: 1px solid var(--border-color);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .cancel-delete-btn:hover {
+        background: var(--bg-secondary);
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .page-container {
+            padding: 2rem 1rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+        }
+
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .header-buttons {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .header-buttons a {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .detail-content {
+            padding: 1.5rem;
+        }
+
+        .detail-header {
+            padding: 1.5rem;
+        }
+
+        .detail-table th,
+        .detail-table td {
+            padding: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .detail-table th {
+            width: 40%;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .action-group {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .btn-primary,
+        .btn-secondary,
+        .delete-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .delete-confirm-actions {
+            flex-direction: column;
+        }
+
+        .confirm-delete-btn,
+        .cancel-delete-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+    }
+
+    .page-header,
+    .detail-container {
+        animation: fadeInUp 0.6s ease-out;
+    }
+</style>
+
+<div class="page-container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+        <a href="{{ path('app_home') }}">
+            <span>🏠</span>
+            Accueil
+        </a>
+        <span class="breadcrumb-separator">›</span>
+        <a href="{{ path('app_livre_index') }}">
+            <span>📚</span>
+            Livres
+        </a>
+        <span class="breadcrumb-separator">›</span>
+        <span>Détails</span>
+    </nav>
+
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">📖 Détails du Livre</h1>
+            <p class="page-subtitle">Informations complètes sur le livre sélectionné</p>
+        </div>
+        <div class="header-buttons">
+            <a href="{{ path('app_livre_index') }}" class="btn-secondary">
+                ← Retour à la liste
+            </a>
+        </div>
+    </div>
+
+    <div class="detail-container">
+        <div class="detail-header">
+            <span class="detail-icon">📖</span>
+            <h2 class="detail-title">{{ livre.titre }}</h2>
+            <p class="detail-subtitle">ID: {{ livre.id }} • ISBN: {{ livre.isbn ?? 'Non renseigné' }}</p>
+        </div>
+
+        <div class="detail-content">
+            <table class="detail-table">
+                <tbody>
+                    <tr>
+                        <th>ID</th>
+                        <td>#{{ livre.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Titre</th>
+                        <td><strong>{{ livre.titre }}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>ISBN</th>
+                        <td>
+                            {% if livre.isbn %}
+                                <span class="isbn-code">{{ livre.isbn }}</span>
+                            {% else %}
+                                <span style="color: var(--text-muted);">Non renseigné</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Quantité</th>
+                        <td>
+                            {% if livre.quantite > 10 %}
+                                <span class="status-badge status-high">
+                                    <span>✅</span>
+                                    {{ livre.quantite }} exemplaires
+                                </span>
+                            {% elseif livre.quantite > 5 %}
+                                <span class="status-badge status-medium">
+                                    <span>⚠️</span>
+                                    {{ livre.quantite }} exemplaires
+                                </span>
+                            {% else %}
+                                <span class="status-badge status-low">
+                                    <span>❌</span>
+                                    {{ livre.quantite }} exemplaires
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Prix</th>
+                        <td><span class="price-tag">{{ livre.pr }} Dt</span></td>
+                    </tr>
+                    <tr>
+                        <th>Date de publication</th>
+                        <td>
+                            {% if livre.datepub %}
+                                {{ livre.datepub|date('d/m/Y') }}
+                            {% else %}
+                                <span style="color: var(--text-muted);">Non renseignée</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="action-buttons">
+                <div class="action-group">
+                    <a href="{{ path('app_livre_edit', {'id': livre.id}) }}" class="btn-primary">
+                        <span>✏️</span>
+                        Modifier le Livre
+                    </a>
+                    <a href="{{ path('app_livre_index') }}" class="btn-secondary">
+                        <span>↶</span>
+                        Retour à la liste
+                    </a>
+                </div>
+                
+                <div class="delete-form">
+                    <button type="button" class="delete-btn" onclick="showDeleteConfirm()">
+                        <span>🗑️</span>
+                        Supprimer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteConfirmModal" class="delete-confirm-modal">
+    <div class="delete-confirm-content">
+        <span class="delete-confirm-icon">⚠️</span>
+        <h3 class="delete-confirm-title">Confirmer la suppression</h3>
+        <p class="delete-confirm-message">
+            Êtes-vous sûr de vouloir supprimer le livre <strong>"{{ livre.titre }}"</strong> ?<br>
+            Cette action est irréversible.
+        </p>
+        <div class="delete-confirm-actions">
+            <form method="post" action="{{ path('app_livre_delete', {'id': livre.id}) }}" id="deleteForm">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ livre.id) }}">
+                <button type="submit" class="confirm-delete-btn">
+                    <span>🗑️</span>
+                    Oui, supprimer
+                </button>
+            </form>
+            <button type="button" class="cancel-delete-btn" onclick="hideDeleteConfirm()">
+                <span>↶</span>
+                Annuler
+            </button>
+        </div>
+    </div>
+</div>
+<script>
+// Déclarer les fonctions dans le scope global
+window.showDeleteConfirm = function() {
+    const modal = document.getElementById('deleteConfirmModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        modal.style.animation = 'fadeInUp 0.3s ease-out';
+    }
+};
+
+window.hideDeleteConfirm = function() {
+    const modal = document.getElementById('deleteConfirmModal');
+    if (modal) {
+        modal.style.animation = 'fadeOut 0.3s ease-out';
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300);
+    }
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Close modal when clicking outside
+    const modal = document.getElementById('deleteConfirmModal');
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideDeleteConfirm();
+            }
+        });
+    }
+
+    // Add fadeOut animation to document
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+    `;
+    document.head.appendChild(style);
+});
+</script>
+{% endblock %}
