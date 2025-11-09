@@ -17,10 +17,7 @@ class ErrorController extends AbstractController
         $baseUrl = $request->getSchemeAndHttpHost();
         $cleanPath = '/' . ltrim($any, '/');
         $cleanUrl = $baseUrl . $cleanPath;
-        
-        // Log pour le débogage (optionnel)
-        // error_log("Double slash detected: {$request->getUri()} -> {$cleanUrl}");
-        
+       
         return $this->redirect($cleanUrl, 301);
     }
 
@@ -29,20 +26,20 @@ class ErrorController extends AbstractController
     public function catchAll(Request $request, string $any = ''): Response
     {
         $currentUrl = $request->getUri();
-        
+
         // Vérifier si l'URL contient des doubles slashes après le domaine
         $parsedUrl = parse_url($currentUrl);
         if (isset($parsedUrl['path']) && strpos($parsedUrl['path'], '//') !== false) {
             $cleanPath = preg_replace('#/+#', '/', $parsedUrl['path']);
-            $cleanUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] . 
-                       (isset($parsedUrl['port']) ? ':' . $parsedUrl['port'] : '') . 
-                       $cleanPath . 
-                       (isset($parsedUrl['query']) ? '?' . $parsedUrl['query'] : '') . 
+            $cleanUrl = $parsedUrl['scheme'] . '://' . $parsedUrl['host'] .
+                       (isset($parsedUrl['port']) ? ':' . $parsedUrl['port'] : '') .
+                       $cleanPath .
+                       (isset($parsedUrl['query']) ? '?' . $parsedUrl['query'] : '') .
                        (isset($parsedUrl['fragment']) ? '#' . $parsedUrl['fragment'] : '');
-            
+
             return $this->redirect($cleanUrl, 301);
         }
-        
+
         return $this->render('error/404.html.twig', [
             'current_url' => $currentUrl,
             'requested_path' => $any

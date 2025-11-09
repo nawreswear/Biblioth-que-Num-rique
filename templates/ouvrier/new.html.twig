@@ -40,14 +40,14 @@
 
         <div class="form-content">
             {{ form_start(form, {'attr': {'class': 'ouvrier-create-form', 'novalidate': 'novalidate'}}) }}
-                
+
                 <div class="form-row">
                     <div class="form-group">
                         {{ form_label(form.nom, null, {'label_attr': {'class': 'form-label required'}}) }}
                         <div class="input-wrapper">
                             {{ form_widget(form.nom, {'attr': {
                                 'class': 'form-input',
-                                'placeholder': 'Ex: Dupont, Martin...',
+                                'placeholder': 'Ex: Nawres...',
                                 'autocomplete': 'family-name'
                             }}) }}
                         </div>
@@ -68,7 +68,7 @@
                         <div class="input-wrapper">
                             {{ form_widget(form.prenom, {'attr': {
                                 'class': 'form-input',
-                                'placeholder': 'Ex: Jean, Marie...',
+                                'placeholder': 'Ex: Wear...',
                                 'autocomplete': 'given-name'
                             }}) }}
                         </div>
@@ -694,17 +694,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewSalary = document.getElementById('previewSalary');
     const previewGrade = document.getElementById('previewGrade');
     const submitButton = document.getElementById('submitButton');
-    
+
     // Aperçu en temps réel
     function updatePreview() {
         const nom = nomInput.value.trim();
         const prenom = prenomInput.value.trim();
         const salaire = salaireInput.value.trim();
         const grade = gradeInput.value.trim();
-        
+
         if (nom || prenom || salaire || grade) {
             previewSection.classList.add('visible');
-            
+
             // Mettre à jour l'avatar
             if (prenom && nom) {
                 previewAvatar.textContent = (prenom.charAt(0) + nom.charAt(0)).toUpperCase();
@@ -715,57 +715,57 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 previewAvatar.textContent = '??';
             }
-            
+
             // Mettre à jour le nom
             const fullName = `${prenom || 'Prénom'} ${nom || 'Nom'}`.trim();
             previewName.textContent = fullName || 'Nom Prénom';
-            
+
             // Mettre à jour le salaire
             const salaireValue = salaire ? parseFloat(salaire).toLocaleString('fr-FR', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             }) : '0,00';
             previewSalary.textContent = `Salaire: ${salaireValue} €`;
-            
+
             // Mettre à jour le grade
             previewGrade.textContent = `Grade: ${grade || 'Non spécifié'}`;
         } else {
             previewSection.classList.remove('visible');
         }
     }
-    
+
     // Écouteurs d'événements pour l'aperçu
     nomInput.addEventListener('input', updatePreview);
     prenomInput.addEventListener('input', updatePreview);
     salaireInput.addEventListener('input', updatePreview);
     gradeInput.addEventListener('input', updatePreview);
-    
+
     // Validation en temps réel
     const inputs = form.querySelectorAll('.form-input, .form-textarea');
-    
+
     inputs.forEach(input => {
         input.addEventListener('blur', function() {
             validateField(this);
         });
-        
+
         input.addEventListener('input', function() {
             if (this.classList.contains('error')) {
                 validateField(this);
             }
         });
     });
-    
+
     function validateField(field) {
         const value = field.value.trim();
-        
+
         // Réinitialiser les classes
         field.classList.remove('error', 'success');
-        
+
         if (field.hasAttribute('required') && !value) {
             field.classList.add('error');
             return false;
         }
-        
+
         // Validation spécifique pour le salaire
         if (field.type === 'number' && field === salaireInput && value) {
             const numValue = parseFloat(value);
@@ -774,24 +774,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 return false;
             }
         }
-        
+
         if (value) {
             field.classList.add('success');
         }
-        
+
         return true;
     }
-    
+
     // Validation du formulaire avant soumission
     form.addEventListener('submit', function(e) {
         let isValid = true;
-        
+
         inputs.forEach(input => {
             if (!validateField(input)) {
                 isValid = false;
             }
         });
-        
+
         if (!isValid) {
             e.preventDefault();
             // Animation de secousse pour les champs invalides
@@ -802,7 +802,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     field.style.animation = '';
                 }, 500);
             });
-            
+
             // Animation du bouton
             submitButton.style.animation = 'shake 0.5s ease-in-out';
             setTimeout(() => {
@@ -814,7 +814,7 @@ document.addEventListener('DOMContentLoaded', function() {
             submitButton.disabled = true;
         }
     });
-    
+
     // Animation de secousse
     const style = document.createElement('style');
     style.textContent = `
@@ -823,7 +823,7 @@ document.addEventListener('DOMContentLoaded', function() {
             25% { transform: translateX(-5px); }
             75% { transform: translateX(5px); }
         }
-        
+
         @keyframes success {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
@@ -831,7 +831,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     `;
     document.head.appendChild(style);
-    
+
     // Initialiser l'aperçu
     updatePreview();
 });
